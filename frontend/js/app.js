@@ -1,7 +1,7 @@
 // URL da API (Modifique para a URL do seu back-end no Render quando fizer o deploy)
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
     ? 'http://localhost:3000/api' 
-    : 'https://SEU-APP-NO-RENDER.onrender.com/api'; // <--- Atualize com sua URL do Render
+    : 'https://agencia-marks-1.onrender.com/'; // <--- Atualize com sua URL do Render
 
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
