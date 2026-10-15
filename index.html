@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-A-R-K-S | Inteligência Comercial</title>
+    <link rel="stylesheet" href="CSS/style.css">
+    <!-- Google Fonts para visual SaaS Premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- TELA DE BOAS-VINDAS / SPLASH COM FADE-IN -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <h1 class="brand-logo">M-A-R-K-S</h1>
+            <p class="brand-tagline">Plataforma Avançada de Inteligência Comercial</p>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- TELA DE AUTENTICAÇÃO (LOGIN) -->
+    <div id="auth-container" class="auth-wrapper hidden">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>M-A-R-K-S</h2>
+                <p>Acesse sua conta corporativa</p>
+            </div>
+            
+            <form id="login-form">
+                <div id="auth-error" class="error-message hidden"></div>
+                
+                <div class="input-group">
+                    <label for="email">E-mail Corporativo</label>
+                    <input type="email" id="email" required placeholder="admin@marks.com">
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="btn-primary">Entrar na Plataforma</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Acesso restrito a clientes e administradores autorizados.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAINEL PRINCIPAL DA APLICAÇÃO (DASHBOARD) -->
+    <div id="app-container" class="app-layout hidden">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <h2>M-A-R-K-S</h2>
+                <span id="user-role-badge" class="badge">Cliente</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="dashboard-view">📊 Dashboard</a>
+                <a href="#" class="nav-item" data-target="prospeccao-view">🎯 Prospecção de Leads</a>
+                <a href="#" class="nav-item" data-target="funil-view">📈 Funil de Vendas</a>
+                <a href="#" class="nav-item" data-target="ia-view">🤖 IA & Mensagens</a>
+                <a href="#" class="nav-item" data-target="empresas-view" id="nav-companies" style="display:none;">🏢 Gestão de Empresas</a>
+                <a href="#" class="nav-item" data-target="config-view">⚙️ Configurações</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span id="sidebar-username">Carregando...</span>
+                    <small id="sidebar-company">...</small>
+                </div>
+                <button id="btn-logout" class="btn-logout">Sair</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <h2 id="page-title">Dashboard</h2>
+                <div class="topbar-right">
+                    <span id="current-time"></span>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- VIEW: DASHBOARD -->
+                <section id="dashboard-view" class="view-section active">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <h3>Leads Ativos</h3>
+                            <p class="metric-value">1,248</p>
+                            <span class="metric-trend positive">+12% este mês</span>
+                        </div>
+                        <div class="metric-card">
+                            <h3>Taxa de Conversão</h3>
+                            <p class="metric-value">24.6%</p>
+                            <span class="metric-trend positive">+4.1%</span>
+                        </div>
+                        <div class="metric-card">
+                            <h3>Propostas Geradas</h3>
+                            <p class="metric-value">84</p>
+                            <span class="metric-trend neutral">Estável</span>
+                        </div>
+                    </div>
+
+                    <div class="welcome-box">
+                        <h3>Bem-vindo ao M-A-R-K-S, <span id="welcome-user-name"></span>!</h3>
+                        <p>Selecione um módulo no menu lateral para iniciar suas operações de inteligência comercial.</p>
+                    </div>
+                </section>
+
+                <!-- VIEW: OUTRAS FERRAMENTAS (Placeholder funcional pronto para expansão) -->
+                <section id="prospeccao-view" class="view-section">
+                    <div class="card-module">
+                        <h3>Módulo de Prospecção</h3>
+                        <p>Busca inteligente e filtros avançados de decisores corporativos.</p>
+                        <button class="btn-primary" onclick="alert('Módulo pronto para integração de busca.')">Novo Filtro de Leads</button>
+                    </div>
+                </section>
+
+                <section id="funil-view" class="view-section">
+                    <div class="card-module">
+                        <h3>Funil de Vendas Comercial</h3>
+                        <p>Acompanhamento de pipeline em tempo real.</p>
+                    </div>
+                </section>
+
+                <section id="ia-view" class="view-section">
+                    <div class="card-module">
+                        <h3>Gerador de Mensagens e Objeções com IA</h3>
+                        <p>Copywriting comercial automatizado de alta conversão.</p>
+                    </div>
+                </section>
+
+                <section id="empresas-view" class="view-section">
+                    <div class="card-module">
+                        <h3>Administração de Empresas e Contas</h3>
+                        <p>Gerenciamento multi-tenant exclusivo para administradores M-A-R-K-S.</p>
+                    </div>
+                </section>
+
+                <section id="config-view" class="view-section">
+                    <div class="card-module">
+                        <h3>Configurações da Conta</h3>
+                        <p>Gerencie sua senha e preferências corporativas.</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="JS/App.js"></script>
+</body>
+</html>
