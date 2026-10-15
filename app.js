@@ -1,11 +1,11 @@
 /**
  * M-A-R-K-S | Plataforma de Inteligência Comercial
- * Frontend Core Application Module (SPA) - Versão Robusta
+ * Frontend Core Application Module (SPA)
  */
 
-const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://localhost:3000/api'
-    : 'https://agencia-marks-1.onrender.com/api';
+// URL fixa garantida apontando para o Render com o sufixo /api
+const API_URL = 'https://agencia-marks-1.onrender.com/api';
+
 
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
