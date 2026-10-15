@@ -1,32 +1,25 @@
 /**
  * M-A-R-K-S | Plataforma de Inteligência Comercial
- * Frontend Core Application Module (SPA)
+ * Frontend Core Application Module (SPA) - Versão Definitiva
  */
 
-// URL fixa garantida apontando para o Render com o sufixo /api
 const API_URL = 'https://agencia-marks-1.onrender.com/api';
 
-
 document.addEventListener('DOMContentLoaded', () => {
-    initApp();
-});
-
-function initApp() {
+    // Inicia o relógio
     startClock();
 
+    // Verifica se já existe sessão ativa
     const token = localStorage.getItem('marks_token');
     const user = JSON.parse(localStorage.getItem('marks_user') || 'null');
 
-    // Executa a transição da Splash Screen após 1.5 segundo
+    // Controla a splash screen e a exibição inicial após 1.5 segundo
     setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         if (splash) {
-            splash.style.transition = 'opacity 0.4s ease';
-            splash.style.opacity = '0';
-            setTimeout(() => splash.remove(), 400);
+            splash.style.display = 'none';
         }
 
-        // Verifica o estado de login com segurança visual
         if (token && user) {
             showApp(user);
         } else {
@@ -39,7 +32,7 @@ function initApp() {
     setupLogout();
     setupLeadForm();
     setupAIGenerator();
-}
+});
 
 function showLogin() {
     const authContainer = document.getElementById('auth-container');
@@ -68,15 +61,15 @@ function showApp(user) {
         appContainer.style.display = 'flex';
     }
 
-    const sidebarUsername = document.getElementById('sidebar-username');
-    const sidebarCompany = document.getElementById('sidebar-company');
-    const welcomeUserName = document.getElementById('welcome-user-name');
+    const usernameEl = document.getElementById('sidebar-username');
+    const companyEl = document.getElementById('sidebar-company');
+    const welcomeEl = document.getElementById('welcome-user-name');
     const roleBadge = document.getElementById('user-role-badge');
     const navCompanies = document.getElementById('nav-companies');
 
-    if (sidebarUsername) sidebarUsername.textContent = user.name || 'Usuário';
-    if (sidebarCompany) sidebarCompany.textContent = user.company_name || 'Organização Principal';
-    if (welcomeUserName) welcomeUserName.textContent = user.name || 'Usuário';
+    if (usernameEl) usernameEl.textContent = user.name || 'Utilizador';
+    if (companyEl) companyEl.textContent = user.company_name || 'Organização Principal';
+    if (welcomeEl) welcomeEl.textContent = user.name || 'Utilizador';
     
     if (roleBadge) {
         roleBadge.textContent = user.role === 'admin' ? 'Administrador' : 'Cliente';
@@ -97,17 +90,18 @@ function setupLoginForm() {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (errorDiv) errorDiv.classList.add('hidden');
+        if (errorDiv) {
+            errorDiv.classList.add('hidden');
+            errorDiv.textContent = '';
+        }
 
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
 
         const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn ? submitBtn.textContent : '';
-
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Autenticando...';
+            submitBtn.textContent = 'A autenticar...';
         }
 
         try {
@@ -120,7 +114,7 @@ function setupLoginForm() {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Credenciais inválidas. Tente novamente.');
+                throw new Error(data.error || 'Credenciais inválidas.');
             }
 
             localStorage.setItem('marks_token', data.token);
@@ -135,7 +129,7 @@ function setupLoginForm() {
         } finally {
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
+                submitBtn.textContent = 'Entrar na Plataforma';
             }
         }
     });
@@ -308,7 +302,7 @@ function setupAIGenerator() {
         const objection = objectionInput ? objectionInput.value.trim() : '';
 
         btnAI.disabled = true;
-        btnAI.textContent = 'Gerando Estratégia...';
+        btnAI.textContent = 'A gerar estratégia...';
 
         try {
             const res = await fetch(`${API_URL}/ai/generate-copy`, {
