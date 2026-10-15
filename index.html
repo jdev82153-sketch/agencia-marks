@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M-A-R-K-S | Inteligência Comercial</title>
-    <link rel="stylesheet" href="CSS/style.css">
-    <!-- Google Fonts para visual SaaS Premium -->
+    <!-- Referência para o estilo na raiz do GitHub Pages -->
+    <link rel="stylesheet" href="./style.css">
+    <!-- Tipografia SaaS Premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -89,7 +90,7 @@
                     <div class="metrics-grid">
                         <div class="metric-card">
                             <h3>Leads Ativos</h3>
-                            <p class="metric-value">1,248</p>
+                            <p class="metric-value" id="metric-total-leads">0</p>
                             <span class="metric-trend positive">+12% este mês</span>
                         </div>
                         <div class="metric-card">
@@ -106,50 +107,104 @@
 
                     <div class="welcome-box">
                         <h3>Bem-vindo ao M-A-R-K-S, <span id="welcome-user-name"></span>!</h3>
-                        <p>Selecione um módulo no menu lateral para iniciar suas operações de inteligência comercial.</p>
+                        <p>Sua plataforma de inteligência comercial está pronta para operação.</p>
                     </div>
                 </section>
 
-                <!-- VIEW: OUTRAS FERRAMENTAS (Placeholder funcional pronto para expansão) -->
+                <!-- VIEW: PROSPECÇÃO DE LEADS -->
                 <section id="prospeccao-view" class="view-section">
                     <div class="card-module">
-                        <h3>Módulo de Prospecção</h3>
-                        <p>Busca inteligente e filtros avançados de decisores corporativos.</p>
-                        <button class="btn-primary" onclick="alert('Módulo pronto para integração de busca.')">Novo Filtro de Leads</button>
+                        <h3>Novo Lead de Prospecção</h3>
+                        <form id="form-new-lead" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
+                            <input type="text" id="lead-name" placeholder="Nome do Contato *" required class="input-style">
+                            <input type="email" id="lead-email" placeholder="E-mail" class="input-style">
+                            <input type="text" id="lead-phone" placeholder="Telefone / WhatsApp" class="input-style">
+                            <input type="text" id="lead-company" placeholder="Empresa" class="input-style">
+                            <button type="submit" class="btn-primary" style="grid-column: span 2;">Cadastrar Lead</button>
+                        </form>
+                    </div>
+
+                    <div class="card-module" style="margin-top: 20px;">
+                        <h3>Base de Leads Cadastrados</h3>
+                        <table class="data-table" id="table-leads">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Empresa</th>
+                                    <th>E-mail</th>
+                                    <th>Telefone</th>
+                                    <th>Estágio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="5" style="text-align: center;">Carregando leads...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </section>
 
+                <!-- VIEW: FUNIL DE VENDAS -->
                 <section id="funil-view" class="view-section">
-                    <div class="card-module">
-                        <h3>Funil de Vendas Comercial</h3>
-                        <p>Acompanhamento de pipeline em tempo real.</p>
+                    <h3>Pipeline do Funil de Vendas</h3>
+                    <div class="kanban-board" id="kanban-board">
+                        <div class="kanban-col" data-stage="Prospecção">
+                            <h4>🎯 Prospecção</h4>
+                            <div class="kanban-cards" id="cards-prospeccao"></div>
+                        </div>
+                        <div class="kanban-col" data-stage="Contato">
+                            <h4>📞 Contato Realizado</h4>
+                            <div class="kanban-cards" id="cards-contato"></div>
+                        </div>
+                        <div class="kanban-col" data-stage="Proposta">
+                            <h4>📑 Proposta Enviada</h4>
+                            <div class="kanban-cards" id="cards-proposta"></div>
+                        </div>
+                        <div class="kanban-col" data-stage="Fechado">
+                            <h4>✅ Fechado</h4>
+                            <div class="kanban-cards" id="cards-fechado"></div>
+                        </div>
                     </div>
                 </section>
 
+                <!-- VIEW: IA & MENSAGENS -->
                 <section id="ia-view" class="view-section">
                     <div class="card-module">
-                        <h3>Gerador de Mensagens e Objeções com IA</h3>
-                        <p>Copywriting comercial automatizado de alta conversão.</p>
+                        <h3>Gerador de Abordagens e Respostas com IA</h3>
+                        <p>Gere textos comerciais para WhatsApp, LinkedIn ou E-mail em segundos.</p>
+                        
+                        <div style="margin-top: 15px;">
+                            <label style="font-size: 0.85rem; color: var(--text-muted);">Objeção do Cliente (Opcional):</label>
+                            <input type="text" id="ai-objection" placeholder="Ex: Está muito caro / Não tenho tempo agora" class="input-style" style="margin-top: 5px; margin-bottom: 12px;">
+                            <button id="btn-generate-ai" class="btn-primary">Gerar Estratégia Comercial</button>
+                        </div>
+
+                        <div id="ai-result-box" style="margin-top: 20px; background: var(--bg-main); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); display: none;">
+                            <h4 style="color: var(--primary-orange); margin-bottom: 8px;">Sugestão Comercial M-A-R-K-S:</h4>
+                            <pre id="ai-result-text" style="white-space: pre-wrap; font-family: inherit; color: var(--text-main);"></pre>
+                        </div>
                     </div>
                 </section>
 
+                <!-- VIEW: GESTÃO DE EMPRESAS (ADMIN) -->
                 <section id="empresas-view" class="view-section">
                     <div class="card-module">
-                        <h3>Administração de Empresas e Contas</h3>
-                        <p>Gerenciamento multi-tenant exclusivo para administradores M-A-R-K-S.</p>
+                        <h3>Administração de Empresas e Multi-Tenancy</h3>
+                        <p>Garantia de isolamento de dados por empresa e níveis de permissão.</p>
                     </div>
                 </section>
 
+                <!-- VIEW: CONFIGURAÇÕES -->
                 <section id="config-view" class="view-section">
                     <div class="card-module">
                         <h3>Configurações da Conta</h3>
-                        <p>Gerencie sua senha e preferências corporativas.</p>
+                        <p>Gestão de credenciais e perfil do usuário.</p>
                     </div>
                 </section>
             </div>
         </main>
     </div>
 
-    <script src="JS/App.js"></script>
+    <!-- Script principal na raiz do GitHub Pages -->
+    <script src="./App.js"></script>
 </body>
 </html>
