@@ -1,9 +1,8 @@
 /**
  * M-A-R-K-S | Plataforma de Inteligência Comercial
- * Frontend Core Application Module (SPA)
+ * Frontend Core Application Module (SPA) - Versão Robusta
  */
 
-// Define a URL base da API no Render (com fallback para desenvolvimento local)
 const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
     ? 'http://localhost:3000/api'
     : 'https://agencia-marks-1.onrender.com/api';
@@ -12,26 +11,22 @@ document.addEventListener('DOMContentLoaded', () => {
     initApp();
 });
 
-/**
- * Inicialização do aplicativo
- */
 function initApp() {
-    // Atualizar relógio no topo da página
     startClock();
 
-    // Recuperar token e dados de sessão
     const token = localStorage.getItem('marks_token');
     const user = JSON.parse(localStorage.getItem('marks_user') || 'null');
 
-    // Executa a transição da Splash Screen de 1.5 segundo
+    // Executa a transição da Splash Screen após 1.5 segundo
     setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         if (splash) {
-            splash.style.transition = 'opacity 0.5s ease';
+            splash.style.transition = 'opacity 0.4s ease';
             splash.style.opacity = '0';
-            setTimeout(() => splash.classList.add('hidden'), 500);
+            setTimeout(() => splash.remove(), 400);
         }
 
+        // Verifica o estado de login com segurança visual
         if (token && user) {
             showApp(user);
         } else {
@@ -39,7 +34,6 @@ function initApp() {
         }
     }, 1500);
 
-    // Configuração dos Event Listeners dos formulários e navegação
     setupLoginForm();
     setupNavigation();
     setupLogout();
@@ -47,28 +41,33 @@ function initApp() {
     setupAIGenerator();
 }
 
-/**
- * Exibe a tela de Login e oculta o Painel
- */
 function showLogin() {
     const authContainer = document.getElementById('auth-container');
     const appContainer = document.getElementById('app-container');
     
-    if (authContainer) authContainer.classList.remove('hidden');
-    if (appContainer) appContainer.classList.add('hidden');
+    if (authContainer) {
+        authContainer.classList.remove('hidden');
+        authContainer.style.display = 'flex';
+    }
+    if (appContainer) {
+        appContainer.classList.add('hidden');
+        appContainer.style.display = 'none';
+    }
 }
 
-/**
- * Exibe o Painel Principal (Dashboard) e carrega os dados
- */
 function showApp(user) {
     const authContainer = document.getElementById('auth-container');
     const appContainer = document.getElementById('app-container');
 
-    if (authContainer) authContainer.classList.add('hidden');
-    if (appContainer) appContainer.classList.remove('hidden');
+    if (authContainer) {
+        authContainer.classList.add('hidden');
+        authContainer.style.display = 'none';
+    }
+    if (appContainer) {
+        appContainer.classList.remove('hidden');
+        appContainer.style.display = 'flex';
+    }
 
-    // Preencher dados do perfil na interface
     const sidebarUsername = document.getElementById('sidebar-username');
     const sidebarCompany = document.getElementById('sidebar-company');
     const welcomeUserName = document.getElementById('welcome-user-name');
@@ -83,18 +82,13 @@ function showApp(user) {
         roleBadge.textContent = user.role === 'admin' ? 'Administrador' : 'Cliente';
     }
 
-    // Exibir opção de gestão de empresas apenas para Administradores
     if (navCompanies) {
         navCompanies.style.display = user.role === 'admin' ? 'block' : 'none';
     }
 
-    // Carregar dados de Leads para Dashboard, Prospecção e Funil
     loadLeads();
 }
 
-/**
- * Gerenciamento do Formulário de Login
- */
 function setupLoginForm() {
     const form = document.getElementById('login-form');
     const errorDiv = document.getElementById('auth-error');
@@ -129,7 +123,6 @@ function setupLoginForm() {
                 throw new Error(data.error || 'Credenciais inválidas. Tente novamente.');
             }
 
-            // Armazenar sessão
             localStorage.setItem('marks_token', data.token);
             localStorage.setItem('marks_user', JSON.stringify(data.user));
 
@@ -148,9 +141,6 @@ function setupLoginForm() {
     });
 }
 
-/**
- * Sistema de navegação em abas (SPA)
- */
 function setupNavigation() {
     const navItems = document.querySelectorAll('.nav-item');
     const sections = document.querySelectorAll('.view-section');
@@ -160,34 +150,23 @@ function setupNavigation() {
         item.addEventListener('click', (e) => {
             e.preventDefault();
 
-            // Desativar todas as abas
             navItems.forEach(nav => nav.classList.remove('active'));
             sections.forEach(sec => sec.classList.remove('active'));
 
-            // Ativar aba clicada
             item.classList.add('active');
             const targetId = item.getAttribute('data-target');
             const targetSection = document.getElementById(targetId);
 
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
+            if (targetSection) targetSection.classList.add('active');
+            if (pageTitle) pageTitle.textContent = item.textContent.replace(/^[^\w\s]+/, '').trim();
 
-            if (pageTitle) {
-                pageTitle.textContent = item.textContent.replace(/^[^\w\s]+/, '').trim();
-            }
-
-            // Recarregar os dados caso troque para módulos dinâmicos
-            if (targetId === 'prospeccao-view' || targetId === 'funil-view' || targetId === 'dashboard-view') {
+            if (['prospeccao-view', 'funil-view', 'dashboard-view'].includes(targetId)) {
                 loadLeads();
             }
         });
     });
 }
 
-/**
- * Encerramento de sessão (Logout)
- */
 function setupLogout() {
     const btnLogout = document.getElementById('btn-logout');
     if (!btnLogout) return;
@@ -199,9 +178,6 @@ function setupLogout() {
     });
 }
 
-/**
- * Carrega lista de leads da API
- */
 function loadLeads() {
     const token = localStorage.getItem('marks_token');
     if (!token) return;
@@ -215,11 +191,10 @@ function loadLeads() {
     })
     .then(res => {
         if (res.status === 401 || res.status === 403) {
-            // Token expirado ou inválido
             localStorage.removeItem('marks_token');
             localStorage.removeItem('marks_user');
             showLogin();
-            throw new Error('Sessão expirada. Faça login novamente.');
+            throw new Error('Sessão expirada.');
         }
         return res.json();
     })
@@ -235,15 +210,12 @@ function loadLeads() {
     .catch(err => console.error('Erro ao buscar leads:', err));
 }
 
-/**
- * Renderiza a Tabela na aba de Prospecção
- */
 function renderLeadsTable(leads) {
     const tbody = document.querySelector('#table-leads tbody');
     if (!tbody) return;
 
     if (!leads || leads.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Nenhum lead cadastrado até o momento.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Nenhum lead cadastrado.</td></tr>';
         return;
     }
 
@@ -258,9 +230,6 @@ function renderLeadsTable(leads) {
     `).join('');
 }
 
-/**
- * Renderiza os cards do Funil de Vendas (Kanban)
- */
 function renderKanban(leads) {
     const stages = [
         { name: 'Prospecção', id: 'cards-prospeccao' },
@@ -289,21 +258,14 @@ function renderKanban(leads) {
     });
 }
 
-/**
- * Configuração do formulário para adicionar novos leads
- */
 function setupLeadForm() {
     const formLead = document.getElementById('form-new-lead');
     if (!formLead) return;
 
     formLead.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         const token = localStorage.getItem('marks_token');
         if (!token) return;
-
-        const submitBtn = formLead.querySelector('button[type="submit"]');
-        if (submitBtn) submitBtn.disabled = true;
 
         const leadData = {
             name: document.getElementById('lead-name').value.trim(),
@@ -323,21 +285,15 @@ function setupLeadForm() {
                 body: JSON.stringify(leadData)
             });
 
-            if (!res.ok) throw new Error('Erro ao salvar o lead.');
-
+            if (!res.ok) throw new Error('Erro ao salvar.');
             formLead.reset();
             loadLeads();
         } catch (err) {
-            alert('Não foi possível cadastrar o lead. Verifique sua conexão.');
-        } finally {
-            if (submitBtn) submitBtn.disabled = false;
+            alert('Não foi possível cadastrar o lead.');
         }
     });
 }
 
-/**
- * Configuração da ferramenta de Inteligência Comercial (Gerador de Copy com IA)
- */
 function setupAIGenerator() {
     const btnAI = document.getElementById('btn-generate-ai');
     if (!btnAI) return;
@@ -349,7 +305,6 @@ function setupAIGenerator() {
         const objectionInput = document.getElementById('ai-objection');
         const resultBox = document.getElementById('ai-result-box');
         const resultText = document.getElementById('ai-result-text');
-
         const objection = objectionInput ? objectionInput.value.trim() : '';
 
         btnAI.disabled = true;
@@ -366,15 +321,12 @@ function setupAIGenerator() {
             });
 
             const data = await res.json();
-
             if (res.ok && data.copy) {
                 if (resultText) resultText.textContent = data.copy;
                 if (resultBox) resultBox.style.display = 'block';
-            } else {
-                throw new Error(data.error || 'Erro ao gerar texto.');
             }
         } catch (err) {
-            alert('Erro ao consultar o Gerador de IA. Tente novamente.');
+            alert('Erro ao consultar IA.');
         } finally {
             btnAI.disabled = false;
             btnAI.textContent = 'Gerar Estratégia Comercial';
@@ -382,9 +334,6 @@ function setupAIGenerator() {
     });
 }
 
-/**
- * Relógio em tempo real no Topbar
- */
 function startClock() {
     const timeElement = document.getElementById('current-time');
     if (!timeElement) return;
@@ -398,9 +347,6 @@ function startClock() {
     setInterval(update, 1000);
 }
 
-/**
- * Função utilitária para tratamento de Strings / Sanitização XSS
- */
 function escapeHtml(str) {
     if (!str) return '';
     return String(str)
